@@ -11,7 +11,7 @@ def load_data():
 
 tokenizer, model = load_data()
 
-st.write("Welcome to the Chatbot. I am still learning, please be patient")
+st.write("Welcome to the Chatbot.")
 
 text_input_container = st.empty()
 input = text_input_container.text_input(key="user", label="User:")
