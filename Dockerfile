@@ -10,4 +10,4 @@ RUN pipenv install --system
 
 COPY . .
 
-CMD ["streamlit", "run", "/usr/app.py"]
+CMD ["streamlit", "run", "/usr/app/app.py"]
