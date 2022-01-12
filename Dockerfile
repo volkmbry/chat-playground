@@ -10,4 +10,5 @@ RUN pipenv install --system
 
 COPY . .
 
-CMD ["streamlit", "run", "/usr/app/app.py"]
+# CMD ["sh", "-c", "streamlit run --server.port 8501 /usr/app/app.py"]
+CMD ["sh", "-c", "streamlit run --server.port $PORT /usr/app/app.py"]
