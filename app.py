@@ -10,7 +10,7 @@ def load_data():
     return tokenizer, model
 
 st.set_page_config(page_title="Chatbot")
-st.write("Welcome to the Chatbot.")
+st.write("Welcome to the Chatbot!")
 tokenizer, model = load_data()
 
 text_input_container = st.empty()
