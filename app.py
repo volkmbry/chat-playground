@@ -14,7 +14,7 @@ st.write("Welcome to the Chatbot!")
 tokenizer, model = load_data()
 
 text_input_container = st.empty()
-input = text_input_container.text_input(key="user", label="User:")
+input = text_input_container.text_input(key="user", label="Enter your question:")
 
 if 'count' not in st.session_state or st.session_state.count == 6:
     st.session_state.count = 0
