@@ -9,9 +9,9 @@ def load_data():
     model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-medium")
     return tokenizer, model
 
-tokenizer, model = load_data()
-
+st.set_page_config(page_title="Chatbot")
 st.write("Welcome to the Chatbot.")
+tokenizer, model = load_data()
 
 text_input_container = st.empty()
 input = text_input_container.text_input(key="user", label="User:")
