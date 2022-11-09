@@ -21,10 +21,7 @@ if 'step' not in st.session_state:
 else:
     st.session_state.step+=1
 
-
-form = st.form("form", True)
-input = form.text_input(key="user", label="Enter your question:")
-form.form_submit_button("Submit")
+input = st.text_input(label="Enter your question:")
 
 if input:
     # encode the new user input, add the eos_token and return a tensor in Pytorch
