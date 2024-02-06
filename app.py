@@ -1,9 +1,9 @@
 import streamlit as st
 import torch
-import transformers
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
-@st.cache(hash_funcs={transformers.models.gpt2.tokenization_gpt2_fast.GPT2TokenizerFast: hash}, suppress_st_warning=True)
+# streamlit cache clear (or menu)
+@st.cache_resource
 def load_data():
     tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-medium")
     model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-medium")
