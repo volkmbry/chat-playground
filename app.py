@@ -1,52 +1,42 @@
 import streamlit as st
-import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
+import seaborn as sns
 
-# streamlit cache clear (or menu)
-@st.cache_resource
-def load_data():
-    tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-medium")
-    model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-medium")
-    return tokenizer, model
+# Load the Iris dataset
+iris_df = sns.load_dataset('iris')
 
-st.set_page_config(page_title="Chatbot")
-st.write("Welcome to the DialoGPT-medium chatbot example.")
-tokenizer, model = load_data()
+# Main function to run the Streamlit app
+def main():
+    st.title('Iris Dataset Exploration')
 
-# Init Session State
-if 'step' not in st.session_state:
-    st.session_state.step = 0
-    st.session_state.chat_history_ids = None
-    st.session_state.history = []
-else:
-    st.session_state.step+=1
+    st.subheader('Dataset Preview')
+    st.write(iris_df.head())
 
-input = st.text_input(label="Enter your question:")
+    # Display options
+    display_option = st.sidebar.radio(
+        "Choose how to display the data:",
+        ('Table', 'Pairplot')
+    )
 
-if input:
-    # encode the new user input, add the eos_token and return a tensor in Pytorch
-    new_user_input_ids = tokenizer.encode(input + tokenizer.eos_token, return_tensors='pt')
-
-    # append the new user input tokens to the chat history
-    bot_input_ids = torch.cat([st.session_state.chat_history_ids, new_user_input_ids], dim=-1) if st.session_state.step > 1 else new_user_input_ids
-
-    # generated a response while limiting the total chat history to 1000 tokens, 
-    st.session_state.chat_history_ids = model.generate(bot_input_ids, max_length=1000, pad_token_id=tokenizer.eos_token_id)
-
-    # pretty print last ouput tokens from bot
-    response = tokenizer.decode(st.session_state.chat_history_ids[:, bot_input_ids.shape[-1]:][0], skip_special_tokens=True)
-    st.session_state.history.append(input)
-    st.session_state.history.append(response)
-
-if st.button('Reset'):
-    st.session_state.step = 0
-    st.session_state.chat_history_ids = None
-    st.session_state.history = []
-
-for x in range(len(st.session_state.history)):
-    person = "**User**" if x%2==0 else "**Bot**"
-    st.write(person, st.session_state.history[x])
+    if display_option == 'Table':
+        st.subheader('Iris Data Table')
+        st.write(iris_df)
     
-st.write("Step: ", st.session_state.step)
-st.write(st.session_state.chat_history_ids)
+    elif display_option == 'Pairplot':
+        st.subheader('Pairplot of Iris Dataset')
+        
+        # Select features for pairplot
+        selected_features = st.sidebar.multiselect(
+            "Select features for pairplot:",
+            iris_df.columns.tolist(),
+            default=["sepal_length", "sepal_width", "petal_length", "petal_width"]
+        )
+        
+        # Generate pairplot based on selected features
+        if len(selected_features) > 1:
+            sns.pairplot(iris_df[selected_features])
+            st.pyplot()
+        else:
+            st.warning("Please select at least two features for pairplot.")
 
+if __name__ == "__main__":
+    main()
