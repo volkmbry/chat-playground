@@ -1,12 +1,17 @@
 import streamlit as st
-import seaborn as sns
+import pandas as pd
 
 # Load the Iris dataset
-iris_df = sns.load_dataset('iris')
+def load_iris_dataset():
+    url = "https://gist.githubusercontent.com/curran/a08a1080b88344b0c8a7/raw/639388c2cbc2120a14dcf466e85730eb8be498bb/iris.csv"
+    return pd.read_csv(url)
 
 # Main function to run the Streamlit app
 def main():
     st.title('Iris Dataset Exploration')
+
+    # Load dataset
+    iris_df = load_iris_dataset()
 
     st.subheader('Dataset Preview')
     st.write(iris_df.head())
@@ -27,14 +32,14 @@ def main():
         # Select features for pairplot
         selected_features = st.sidebar.multiselect(
             "Select features for pairplot:",
-            iris_df.columns.tolist(),
+            iris_df.columns.tolist()[:-1],  # Exclude the target variable
             default=["sepal_length", "sepal_width", "petal_length", "petal_width"]
         )
         
         # Generate pairplot based on selected features
         if len(selected_features) > 1:
-            sns.pairplot(iris_df[selected_features])
-            st.pyplot()
+            st.write("Pairplot with selected features:", selected_features)
+            st.write("Please note: Streamlit does not support pairplot directly. You may need to use an alternative visualization library.")
         else:
             st.warning("Please select at least two features for pairplot.")
 
